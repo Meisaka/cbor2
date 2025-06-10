@@ -37,6 +37,7 @@
     "test:web": "cd web && npm test",
     "build": "npm run ver && tsup",
     "build:sourcemap": "npm run build -- --sourcemap inline",
+    "prepare": "npm run build",
     "watch": "tsup --sourcemap inline --watch src/ --watch test/ --onSuccess 'npm run test:noBuild'",
     "ci": "npm run clean && npm run build:sourcemap && npm run lint && npm run test:noBuild",
     "ver": "package-extract -st -o src/version.ts"
