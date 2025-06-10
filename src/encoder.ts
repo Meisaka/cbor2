@@ -469,10 +469,12 @@ function writeObject(
   }
 
   // Note: keys will never be duplicated here.
-  const entries = Object.entries(obj).map<KeyValueEncoded>(
+  const entries: KeyValueEncoded[] = [];
+  for(const [k, v] of Object.entries(obj)) {
+    if(typeof v === 'function') continue;
     // Circular
-    e => [e[0], e[1], encode(e[0], opts)]
-  );
+    entries.push([k, v, encode(k, opts)]);
+  }
   if (opts.sortKeys) {
     entries.sort(opts.sortKeys);
   }
@@ -510,6 +512,7 @@ export function writeUnknown(
       w.writeUint8(UNDEFINED);
       break;
     case 'object': writeObject(val, w, opts); break;
+    case 'function': w.writeUint8(UNDEFINED); break;
     case 'symbol':
       throw new TypeError(`Unknown symbol: ${val.toString()}`);
     default:
